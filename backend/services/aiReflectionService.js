@@ -1,17 +1,28 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { v4: uuidv4 } = require('uuid');
 
 class AIReflectionService {
   constructor() {
-    // Initialize Google AI
+    // Initialize OpenRouter API configuration
     if (!process.env.GOOGLE_AI_KEY) {
       console.warn('⚠️  GOOGLE_AI_KEY not found in environment variables');
-      console.warn('   Add your Google AI key to .env file: GOOGLE_AI_KEY=your_key_here');
-      console.warn('   Get your key at: https://makersuite.google.com/app/apikey');
+      console.warn('   Add your OpenRouter API key to .env file: GOOGLE_AI_KEY=your_key_here');
+      console.warn('   Get your key at: https://openrouter.ai/keys');
     }
     
-    this.genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_KEY || 'dummy-key');
-    this.model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
+    this.apiKey = process.env.GOOGLE_AI_KEY;
+    this.isOpenRouterKey = this.apiKey && this.apiKey.startsWith('sk-or-v1-');
+    
+    // OpenRouter API configuration
+    this.openRouterConfig = {
+      baseURL: 'https://openrouter.ai/api/v1',
+      model: 'google/gemini-pro', // Using Google's Gemini Pro through OpenRouter
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://mybetterself.app',
+        'X-Title': 'MyBetterSelf AI Reflection'
+      }
+    };
     
     // In-memory storage (development)
     this.userProfiles = new Map();
@@ -33,7 +44,7 @@ class AIReflectionService {
       ]
     };
 
-    console.log('🎭 AIReflectionService initialized');
+    console.log(`🎭 AIReflectionService initialized with ${this.isOpenRouterKey ? 'OpenRouter' : 'fallback'} API`);
   }
 
   async createReflectionProfile(userData) {
@@ -92,12 +103,11 @@ class AIReflectionService {
 
       let response;
       try {
-        if (!process.env.GOOGLE_AI_KEY || process.env.GOOGLE_AI_KEY === 'dummy-key') {
-          // Fallback response when no API key
+        if (!this.apiKey || !this.isOpenRouterKey) {
+          // Fallback response when no API key or wrong format
           response = this.generateFallbackResponse(profile, userMessage, mood);
         } else {
-          const result = await this.model.generateContent(reflectionPrompt);
-          response = result.response.text();
+          response = await this.callOpenRouterAPI(reflectionPrompt);
         }
       } catch (aiError) {
         console.error('AI generation error:', aiError);
@@ -114,7 +124,7 @@ class AIReflectionService {
       conversations.push(conversationEntry);
       
       // Update profile stats
-      profile.conversationCount = conversations.length / 2; // Divide by 2 since each exchange has user + ai
+      profile.conversationCount = Math.floor(conversations.length / 2); // Divide by 2 since each exchange has user + ai
       
       return {
         success: true,
@@ -132,6 +142,44 @@ class AIReflectionService {
         error: 'Could not generate reflection',
         fallbackResponse: this.getFallbackResponse(mood || 'neutral')
       };
+    }
+  }
+
+  async callOpenRouterAPI(prompt) {
+    try {
+      const response = await fetch(`${this.openRouterConfig.baseURL}/chat/completions`, {
+        method: 'POST',
+        headers: this.openRouterConfig.headers,
+        body: JSON.stringify({
+          model: this.openRouterConfig.model,
+          messages: [
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          max_tokens: 500,
+          temperature: 0.7,
+          top_p: 1,
+          frequency_penalty: 0,
+          presence_penalty: 0
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`OpenRouter API error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.choices && data.choices[0] && data.choices[0].message) {
+        return data.choices[0].message.content.trim();
+      } else {
+        throw new Error('Invalid response format from OpenRouter API');
+      }
+    } catch (error) {
+      console.error('OpenRouter API call failed:', error);
+      throw error;
     }
   }
 
