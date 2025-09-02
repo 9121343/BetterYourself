@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './AIReflectionChat.css';
+import ReadyPlayerMeAvatar from './ReadyPlayerMeAvatar';
 
-const AIReflectionChat = ({ profile, onBack, onError }) => {
+const AIReflectionChat = ({ profile, onBack, onError, onProfileUpdate }) => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -132,7 +133,16 @@ const AIReflectionChat = ({ profile, onBack, onError }) => {
           ← Back
         </button>
         <div className="profile-info">
-          <div className="profile-avatar">🎭</div>
+          <div className="profile-avatar">
+            <ReadyPlayerMeAvatar
+              avatarUrl={profile.avatarUrl}
+              onAvatarChange={(url) => {
+                if (onProfileUpdate) {
+                  onProfileUpdate({ avatarUrl: url });
+                }
+              }}
+            />
+          </div>
           <div className="profile-details">
             <h2>{profile.name}</h2>
             <p className={`status ${connectionStatus}`}>
