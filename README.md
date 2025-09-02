@@ -17,7 +17,7 @@ MyBetterSelf is designed to be your digital companion for personal growth. Throu
 ### Tech Stack
 - **Frontend**: React 18 + Vite
 - **Backend**: Node.js + Express
-- **AI Engine**: Google Generative AI (Gemini)
+- **AI Engine**: Google Generative AI (Gemini) via OpenRouter
 - **Styling**: Modern CSS with design system
 - **Storage**: In-memory Maps (development) + LocalStorage (frontend)
 
@@ -51,7 +51,7 @@ MyBetterSelf/
 
 ### Prerequisites
 - Node.js 16+ installed
-- Google AI API key (get from [Google AI Studio](https://makersuite.google.com/app/apikey))
+- OpenRouter API key (supports Google AI models)
 
 ### Installation
 
@@ -73,9 +73,9 @@ MyBetterSelf/
    cp env.template .env
    ```
    
-   Edit `.env` and add your Google AI API key:
+   Edit `.env` and add your OpenRouter API key:
    ```
-   GOOGLE_AI_KEY=your_actual_google_ai_key_here
+   GOOGLE_AI_KEY=sk-or-v1-your_openrouter_api_key_here
    ```
 
 4. **Start the Development Servers**
@@ -159,7 +159,7 @@ GET /api/ai-reflection/profile/:profileId
 ### Environment Variables
 Copy `backend/env.template` to `backend/.env` and configure:
 
-- `GOOGLE_AI_KEY`: Your Google AI API key (required)
+- `GOOGLE_AI_KEY`: Your OpenRouter API key (required)
 - `PORT`: Backend server port (default: 4000)
 - `NODE_ENV`: Environment (development/production)
 
@@ -227,7 +227,7 @@ MIT License - see LICENSE file for details.
 - Verify CORS settings in backend
 
 **AI responses not working**
-- Verify your Google AI API key is valid
+- Verify your OpenRouter API key is valid
 - Check the console for error messages
 - Ensure you have internet connectivity
 
@@ -242,5 +242,7 @@ If everything is set up correctly, you should see:
 - Backend: "🎭 AI Reflection System: Ready" in terminal
 - Frontend: Beautiful homepage at `http://localhost:5173`
 - Ability to create your AI reflection and start chatting
+
+The system now supports OpenRouter API for accessing Google's Gemini Pro model with enhanced reliability and performance.
 
 Enjoy your journey with MyBetterSelf! 🌟
