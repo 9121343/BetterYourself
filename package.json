@@ -1,0 +1,16 @@
+{
+  "name": "mybetterself-full-stack",
+  "version": "1.0.0",
+  "description": "MyBetterSelf AI Personal Development Platform",
+  "scripts": {
+    "install": "cd frontend && npm install && cd ../backend && npm install",
+    "dev": "cd backend && npm run dev & cd frontend && npm run dev",
+    "start": "npm run dev",
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build"
+  },
+  "keywords": ["ai", "personal-development", "react", "node"],
+  "author": "MyBetterSelf Team",
+  "license": "MIT"
+}
