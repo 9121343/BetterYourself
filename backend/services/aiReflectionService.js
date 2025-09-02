@@ -1,5 +1,17 @@
 const { v4: uuidv4 } = require('uuid');
 
+// Helper: fetch with timeout to avoid hanging requests
+const fetchWithTimeout = async (url, options = {}, timeoutMs = 12000) => {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    return res;
+  } finally {
+    clearTimeout(id);
+  }
+};
+
 class AIReflectionService {
   constructor() {
     // Initialize OpenRouter API configuration
@@ -147,7 +159,7 @@ class AIReflectionService {
 
   async callOpenRouterAPI(prompt) {
     try {
-      const response = await fetch(`${this.openRouterConfig.baseURL}/chat/completions`, {
+      const response = await fetchWithTimeout(`${this.openRouterConfig.baseURL}/chat/completions`, {
         method: 'POST',
         headers: this.openRouterConfig.headers,
         body: JSON.stringify({
@@ -164,7 +176,7 @@ class AIReflectionService {
           frequency_penalty: 0,
           presence_penalty: 0
         })
-      });
+      }, 12000);
 
       if (!response.ok) {
         throw new Error(`OpenRouter API error: ${response.status} ${response.statusText}`);
