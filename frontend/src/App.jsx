@@ -33,6 +33,15 @@ function App() {
     setError(null);
   };
 
+  // Merge updates into profile and persist
+  const handleProfileUpdate = (partial) => {
+    setUserProfile(prev => {
+      const updated = { ...(prev || {}), ...(partial || {}) };
+      try { localStorage.setItem('aiReflectionProfile', JSON.stringify(updated)); } catch {}
+      return updated;
+    });
+  };
+
   // Reset profile and return to home
   const resetProfile = () => {
     setUserProfile(null);
@@ -213,6 +222,7 @@ function App() {
             profile={userProfile}
             onBack={() => setCurrentView('home')}
             onError={handleError}
+            onProfileUpdate={handleProfileUpdate}
           />
         )}
 
