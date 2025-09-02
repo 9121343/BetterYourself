@@ -65,17 +65,18 @@ const ReadyPlayerMeAvatar = ({ avatarUrl, onAvatarChange }) => {
   return (
     <div className="rpm-avatar-wrapper" title={avatarUrl ? 'Customize Avatar' : 'Create Avatar'}>
       {viewerReady && avatarUrl ? (
-        <model-viewer
-          src={avatarUrl}
-          class="rpm-avatar-thumb"
-          camera-controls
-          ar
-          autoplay
-          exposure="0.9"
-          shadow-intensity="0.5"
-          interaction-prompt="none"
-          onClick={openCreator}
-        />
+        <div onClick={openCreator}>
+          <model-viewer
+            src={avatarUrl}
+            className="rpm-avatar-thumb"
+            camera-controls
+            ar
+            autoplay
+            exposure="0.9"
+            shadow-intensity="0.5"
+            interaction-prompt="none"
+          />
+        </div>
       ) : (
         <button className="rpm-avatar-fallback" onClick={openCreator} title="Create Avatar">🎭</button>
       )}
