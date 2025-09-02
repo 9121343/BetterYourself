@@ -1,0 +1,14 @@
+.rpm-avatar-wrapper{position:relative;display:flex;align-items:center;justify-content:center}
+.rpm-avatar-thumb{width:48px;height:48px;border-radius:50%;overflow:hidden;--poster-color:transparent}
+.rpm-avatar-fallback{width:48px;height:48px;border:none;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);font-size:1.5rem;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer}
+.rpm-avatar-fallback:hover{background:rgba(255,255,255,0.3)}
+
+/* Creator overlay */
+.rpm-creator-overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center}
+.rpm-creator-backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.5)}
+.rpm-creator-modal{position:relative;z-index:1001;background:#0e0e10;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.4);width:90vw;height:85vh;display:flex;flex-direction:column;overflow:hidden}
+.rpm-creator-header{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1rem;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff}
+.rpm-creator-title{font-weight:600}
+.rpm-creator-close{border:none;background:rgba(255,255,255,0.2);color:#fff;border-radius:8px;padding:0.25rem 0.5rem;cursor:pointer}
+.rpm-creator-close:hover{background:rgba(255,255,255,0.3)}
+.rpm-creator-frame{flex:1;border:0;width:100%;height:100%}
